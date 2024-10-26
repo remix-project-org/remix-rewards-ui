@@ -1623,7 +1623,7 @@ module.exports = {
         abi: remixRewardAbi
       }
     },
-    provider: 'https://scroll-mainnet.chainstacklabs.com',
+    provider: 'https://rpc.ankr.com/scroll',
     etherscan: 'https://scrollscan.com/tx/'
   },
   5: {
