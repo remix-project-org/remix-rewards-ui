@@ -44,11 +44,12 @@ export async function getEnsName(address) {
         result = cache['ens_' + address]
     } else {
         try {
-            result = await fetch(`https://remix-reward-api.vercel.app/ens/${address}`)
-            result = await result.json()
-            cache['ens_' + address] = result            
+            // result = await fetch(`https://remix-reward-api.vercel.app/ens/${address}`)
+            // result = await result.json()
+            // cache['ens_' + address] = result
+            return null      
         } catch (e) {
-            return undefined
+            return null
         }
     }
     return result.name
