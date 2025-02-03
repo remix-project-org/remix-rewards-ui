@@ -260,6 +260,13 @@ export default function BrowseBadges() {
                 setShowSpinner(true)
                 setSelectedChainId(534352)
               }}>see on Scroll</ToggleButton>
+              {/*
+              <ToggleButton className='MuiTypography-root MuiTypography-button' value='scroll' onClick={() => {
+                setBadges([])
+                setShowSpinner(true)
+                setSelectedChainId(1135)
+              }}>see on Lisk</ToggleButton>
+              */}
       </ToggleButtonGroup>        
         <Box mt={8}>
           <Typography variant={'h6'} fontWeight={700} fontFamily={'Noah'} mb={3} sx={{ color: '#333333' }}>

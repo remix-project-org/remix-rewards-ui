@@ -1635,5 +1635,15 @@ module.exports = {
     },
     provider: 'https://eth-goerli.g.alchemy.com/v2/1fpzjlzdaT-hFeeTXFY-yzM-WujQLfEl',
     etherscan: 'https://goerli.etherscan.io/tx/'
+  },
+  1135: {
+    contracts: {
+      REMIX_REWARD: {
+        address: '0xaec1a92e3177905C3C82284AD4B0c7c567874Aa3',
+        abi: remixRewardAbi
+      }
+    },
+    provider: 'https://lisk.drpc.org',
+    etherscan: 'https://blockscout.lisk.com/tx/'
   }
 };
