@@ -10,11 +10,26 @@ const chainsAddresses = {
     'scroll': '0x2bC16Bf30435fd9B3A3E73Eb759176C77c28308D'
 }
 
-let cache = null
+let cacheGlobal = null
+
 fetch(`https://remix-reward-api.vercel.app/cache`).then(async (cacheRes) => {
-    cache = await cacheRes.json()
+    cacheGlobal = await cacheRes.json()
 })
+
+const getCache = async () => {
+    if (cacheGlobal) return cacheGlobal
+    await new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+            if (cacheGlobal) {
+                clearInterval(intervalId)
+                resolve(cacheGlobal)
+            }
+        }, 100)
+     })
+}
+
 export async function getTokenData(chainId, id) {
+    const cache = await getCache()
     id = parseInt(id)
     let result
     if (cache[chainsAddresses[chains[chainId]] + '_' + id]) {
@@ -41,6 +56,7 @@ export async function getTokenData(chainId, id) {
 }
 
 export async function getEnsName(address) {
+    const cache = await getCache()
     address = ethers.utils.getAddress(address)
     let result
     if (cache['ens_' + address]) {
