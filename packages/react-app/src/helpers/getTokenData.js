@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 
 const chains = {
     10: 'optimism',
@@ -9,15 +10,16 @@ const chainsAddresses = {
     'scroll': '0x2bC16Bf30435fd9B3A3E73Eb759176C77c28308D'
 }
 
-const cache = {}
-
+let cache = null
+fetch(`https://remix-reward-api.vercel.app/cache`).then(async (cacheRes) => {
+    cache = await cacheRes.json()
+})
 export async function getTokenData(chainId, id) {
     id = parseInt(id)
-   let result
-    if (cache[chainId + ' ' + id]) {
-        result = cache[chainId + ' ' + id]
+    let result
+    if (cache[chainsAddresses[chains[chainId]] + '_' + id]) {
+        result = cache[chainsAddresses[chains[chainId]] + '_' + id]
     }
-    
     
     if (!result) {
         try {
@@ -25,7 +27,7 @@ export async function getTokenData(chainId, id) {
             result = await fetch(`https://remix-reward-api.vercel.app/api-${chains[chainId]}/${id}`)
             console.log('getTokenData response', id)
             result = await result.json()
-            cache[chainId + ' ' + id] = result
+            cache[chainsAddresses[chains[chainId]] + '_' + id] = result
         } catch (e) {
             return {
                 tokenType: `token type ${id}`,
@@ -39,14 +41,15 @@ export async function getTokenData(chainId, id) {
 }
 
 export async function getEnsName(address) {
+    address = ethers.utils.getAddress(address)
     let result
     if (cache['ens_' + address]) {
         result = cache['ens_' + address]
     } else {
         try {
-            // result = await fetch(`https://remix-reward-api.vercel.app/ens/${address}`)
-            // result = await result.json()
-            // cache['ens_' + address] = result
+            result = await fetch(`https://remix-reward-api.vercel.app/ens/${address}`)
+            result = await result.json()
+            cache['ens_' + address] = result
             return null      
         } catch (e) {
             return null
