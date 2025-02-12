@@ -30,14 +30,6 @@ function App() {
 
   const targetNetwork = NETWORKS['optimism']
 
-  let contractRef: any
-  let providerRef: any
-  //@ts-ignore
-  const extContract: any = externalContracts[selectedChainId]
-  if (extContract && extContract.contracts && extContract.contracts.REMIX_REWARD) {
-    contractRef = extContract.contracts.REMIX_REWARD
-    providerRef = extContract.provider
-  }
   const closeToast = () => {
     setShowToast(false)
   }
@@ -53,13 +45,17 @@ function App() {
 
   useEffect(() => {
     const run = async () => {
-      const local = new ethers.providers.StaticJsonRpcProvider(providerRef)
-      await local.ready
-      setLocalProvider(local)
-      setLoaded(true)
+      //@ts-ignore
+      const extContract: any = externalContracts[selectedChainId]
+      if (extContract && extContract.contracts && extContract.contracts.REMIX_REWARD) {
+        const local = new ethers.providers.StaticJsonRpcProvider(extContract.provider)
+        await local.ready
+        setLocalProvider(local)
+        setLoaded(true)
+      }      
     }
     run()
-  }, [providerRef])
+  }, [selectedChainId])
 
   const snackBarAction = (
     <>
@@ -88,7 +84,6 @@ function App() {
     contractConfig,
     displayToast,
     externalContracts,
-    contractRef,
     setShowToast,
     closeWrongNetworkToast,
     showWrongNetworkToast,

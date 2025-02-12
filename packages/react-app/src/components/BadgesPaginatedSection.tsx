@@ -22,7 +22,6 @@ export default function BadgesPaginatedSection({
   const pageSize = 10
   // @ts-ignore
   const { mainnet } = useContext(BadgeContext)
-  // const contract = new ethers.Contract(contractRef.address, contractRef.abi, localProvider)
   const [pageNumber, setPageNumber] = useState(1)
   const [pagedBadges, setPagedBadges] = useState<Array<any>>([])
   const mobileResponsiveMatch = useMediaQuery('(min-width:600px)')

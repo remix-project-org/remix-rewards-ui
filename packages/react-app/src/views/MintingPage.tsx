@@ -8,8 +8,6 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { BadgeContext } from '../contexts/BadgeContext'
 
 export default function MintingPage() {
-  // @ts-ignore
-  const { contractRef } = useContext(BadgeContext)
 
   const theme = useTheme()
   const mobile400 = useMediaQuery(theme.breakpoints.between('sm', 'md'))
@@ -68,7 +66,7 @@ export default function MintingPage() {
           <MintingPageCard
             top={mobile900 ? -15 : mobileResponsiveMatch ? -16 : mobile400 ? -25 : mobile240 ? -14 : -15}
           />
-          <MintingActions contractRef={contractRef} />
+          <MintingActions/>
         </Box>
       </Box>
     </>

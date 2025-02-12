@@ -51,8 +51,7 @@ export default function BrowseBadges() {
   const [groupedBadges, setPagedGroupedBadges] = useState<RewardGroups>({})
   const [error, setErrorMessage] = useState('')
   const [showSpinner, setShowSpinner] = useState(false)
-  const [selectedChainId, setSelectedChainId] = useState(10)
-  const { localProvider, mainnet, address, setAddress, injectedProvider, checkForWeb3Provider } =
+  const { localProvider, mainnet, address, setAddress, injectedProvider, checkForWeb3Provider, selectedChainId, setSelectedChainId } =
     useContext(BadgeContext)
 
   let contractRef
@@ -67,11 +66,14 @@ export default function BrowseBadges() {
     providerRef = externalContracts[selectedChainId].provider
     etherscanRef = externalContracts[selectedChainId].etherscan
   }
-  const contract = useRef(new ethers.Contract(contractRef.address, contractRef.abi, injectedProvider))
+  const contract = useRef(new ethers.Contract(contractRef.address, contractRef.abi, localProvider))
+  
+  const searchInput = useRef('')
+  const intervalId = useRef(null)
 
   useEffect(() => {
     const run = async () => {
-      contract.current = new ethers.Contract(contractRef.address, contractRef.abi, injectedProvider)
+      contract.current = new ethers.Contract(contractRef.address, contractRef.abi, localProvider)
 
       if (!contractRef) {
         setErrorMessage('chain not supported. ' + selectedChainId)
@@ -115,6 +117,7 @@ export default function BrowseBadges() {
           if (badges.length === 0) {
             setShowSpinner(false)
             setErrorMessage('Sorry, reward for the current wallet address does not exist!')
+            setBadges([])
             return
           }
           setBadges(badges)
@@ -125,6 +128,11 @@ export default function BrowseBadges() {
           setErrorMessage("Please make sure your injected provider (metamask) is connected to the right network." + e.message)
         }
       } else {
+        if (!address.startsWith('0x')) {
+          setShowSpinner(false)
+          setErrorMessage('Address should start with 0x or be an ENS name (end with ".eth")')
+          return
+        }
         setErrorMessage('')
         try {
           const balance = await contract.current.balanceOf(address)
@@ -149,6 +157,7 @@ export default function BrowseBadges() {
           if (badges.length === 0) {
             setShowSpinner(false)
             setErrorMessage('Sorry, reward for the current wallet address does not exist!')
+            setBadges([])
             return
           }
           setBadges(badges)
@@ -217,7 +226,7 @@ export default function BrowseBadges() {
   function checkeventBagesAndBadges(badges) {
     return badges && badges.length > 0
   }
-
+  
   return (
     <>
       <Box sx={{ paddingTop: '76px' }}>
@@ -286,9 +295,12 @@ export default function BrowseBadges() {
                 sx={{ color: '#444444' }}
                 label="Wallet Address..."
                 onChange={e => {
-                  setAddress(e.target.value)
+                  if (intervalId.current) clearTimeout(intervalId.current)
+                  searchInput.current = e.target.value
+                  intervalId.current = setTimeout(() => {
+                    setAddress(searchInput.current)                    
+                  }, 500)
                 }}
-                value={address}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton>{address.length > 3 && <SearchIcon />}</IconButton>
