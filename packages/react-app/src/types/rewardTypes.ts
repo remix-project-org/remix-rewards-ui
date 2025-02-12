@@ -101,7 +101,6 @@ export interface BadgeContextProps {
   contractConfig: any
   displayToast: any
   externalContracts: any
-  contractRef: any
   setShowToast: any
   closeWrongNetworkToast: any
   showWrongNetworkToast: any

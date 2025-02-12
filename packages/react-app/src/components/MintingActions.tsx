@@ -13,6 +13,7 @@ import { styled } from '@mui/material'
 import Toast from './Toast'
 import React from 'react'
 import { BadgeContext } from '../contexts/BadgeContext'
+import externalContracts from '../contracts/external_contracts'
 
 const WalletAddressTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-input': {
@@ -24,10 +25,21 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-export default function MintingActions({ contractRef }: { contractRef: any }) {
+export default function MintingActions() {
   const [message, setMessage] = useState('')
   // @ts-ignore
-  const { injectedProvider } = useContext(BadgeContext)
+  const { injectedProvider, selectedChainId } = useContext(BadgeContext)
+
+  let contractRef: any
+  // @ts-ignore
+  let chain: any = externalContracts[selectedChainId]
+  if (
+    chain &&
+    chain.contracts &&
+    chain.contracts.REMIX_REWARD
+  ) {
+    contractRef = chain.contracts.REMIX_REWARD 
+  }
 
   const [walletAddress, setWalletAddress] = useState('')
   const [showToast, setShowToast] = useState(false)
